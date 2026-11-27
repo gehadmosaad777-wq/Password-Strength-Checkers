@@ -1,55 +1,77 @@
 #include <stdio.h>
+#include <string.h>
 
-#define BUFFER_SIZE   64
-#define MIN_LENGTH     8
-#define TYPE_LOWER     1
-#define TYPE_UPPER     2
-#define TYPE_DIGIT     3
-#define TYPE_SPECIAL   4
+#define SIZE      65
+#define MIN_LEN    8
+#define MIN_OK     4
+#define LOWER      1
+#define UPPER      2
+#define DIGIT      3
+#define SPECIAL    4
 
 int char_type(char c) {
-    if (c >= 'a' && c <= 'z') return TYPE_LOWER;
-    else if (c >= 'A' && c <= 'Z') return TYPE_UPPER;
-    else if (c >= '0' && c <= '9') return TYPE_DIGIT;
-    else return TYPE_SPECIAL;
+    if (c >= 'a' && c <= 'z') return LOWER;
+    else if (c >= 'A' && c <= 'Z') return UPPER;
+    else if (c >= '0' && c <= '9') return DIGIT;
+    else return SPECIAL;
 }
 
-int get_score(const char *password) {
-    int has_lower = 0, has_upper = 0, has_digit = 0, has_special = 0;
-    int score = 0;
-    int i = 0;
+int analyze_password(const char *pass) {
+    int lower = 0, upper = 0, digit = 0, special = 0, score = 0, i = 0;
 
-    while (password[i] != '\0') {
-        int type = char_type(password[i]);
+    while (pass[i] != '\0') {
+        int type = char_type(pass[i]);
 
-        if (type == TYPE_LOWER) has_lower = 1;
-        else if (type == TYPE_UPPER) has_upper = 1;
-        else if (type == TYPE_DIGIT) has_digit = 1;
-        else has_special = 1;
+        if (type == LOWER) lower = 1;
+        else if (type == UPPER) upper = 1;
+        else if (type == DIGIT) digit = 1;
+        else special = 1;
         i++;
     }
 
-    if (i >= MIN_LENGTH) score++;
-    if (has_lower) score++;
-    if (has_upper) score++;
-    if (has_digit) score++;
-    if (has_special) score++;
+    if (i >= MIN_LEN) score++;
+    else printf("  - Use at least 8 characters\n");
+    if (lower) score++;
+    else printf("  - Add a lowercase letter\n");
+    if (upper) score++;
+    else printf("  - Add an uppercase letter\n");
+    if (digit) score++;
+    else printf("  - Add a digit\n");
+    if (special) score++;
+    else printf("  - Add a special character (! @ # $ ...)\n");
+
     return score;
 }
 
 int main(void) {
-    char password[BUFFER_SIZE];
+    char pass[SIZE];
     int score;
 
-    printf("Enter a password: ");
-    scanf("%63s", password);
+    printf("PASSWORD STRENGTH CHECKER\n"
+           "Rules (1 point each):\n"
+           "  1. At least 8 characters\n"
+           "  2. A lowercase letter\n"
+           "  3. An uppercase letter\n"
+           "  4. A digit\n"
+           "  5. A special character (! @ # $ ...)\n");
 
-    score = get_score(password);
-    printf("Score  : %d / 5\n", score);
+    printf("Enter a password (no spaces, max 64 chars): ");
+    if (scanf("%64s", pass) == 1) {
+        if (getchar() != '\n') {
+            scanf("%*[^\n]");
+            getchar();
+            printf("No spaces allowed (and max 64 characters). Please try again.\n");
+        } else if (strlen(pass) < MIN_OK) {
+            printf("Too short! Use at least %d characters.\n", MIN_OK);
+        } else {
+            score = analyze_password(pass);
+            if (score <= 2) printf("Result : WEAK\n");
+            else if (score <= 4) printf("Result : MODERATE\n");
+            else printf("Result : STRONG\n");
+        }
+    }
 
-    if (score <= 2) printf("Result : WEAK\n");
-    else if (score <= 4) printf("Result : MODERATE\n");
-    else printf("Result : STRONG\n");
-
+    printf("\nPress Enter to close...\n");
+    getchar();
     return 0;
 }
