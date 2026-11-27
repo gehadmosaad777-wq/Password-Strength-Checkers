@@ -21,7 +21,7 @@
 	.string	"Coffee&Code15!Time"
 .LC9:
 	.string	"Pyramid#Giza26@Cairo"
-	.data
+	.section	.data.rel.local,"aw"
 	.align 32
 	.type	base_passwords, @object
 	.size	base_passwords, 80
@@ -40,7 +40,6 @@ base_passwords:
 	.globl	char_type
 	.type	char_type, @function
 char_type:
-	endbr64
 	pushq	%rbp
 	movq	%rsp, %rbp
 	movl	%edi, %eax
@@ -87,20 +86,19 @@ char_type:
 	.globl	analyze_password
 	.type	analyze_password, @function
 analyze_password:
-	endbr64
 	pushq	%rbp
 	movq	%rsp, %rbp
 	subq	$48, %rsp
 	movq	%rdi, -40(%rbp)
-	movl	$0, -28(%rbp)
-	movl	$0, -24(%rbp)
-	movl	$0, -20(%rbp)
-	movl	$0, -16(%rbp)
-	movl	$0, -12(%rbp)
+	movl	$0, -4(%rbp)
 	movl	$0, -8(%rbp)
+	movl	$0, -12(%rbp)
+	movl	$0, -16(%rbp)
+	movl	$0, -20(%rbp)
+	movl	$0, -24(%rbp)
 	jmp	.L7
 .L12:
-	movl	-8(%rbp), %eax
+	movl	-24(%rbp), %eax
 	movslq	%eax, %rdx
 	movq	-40(%rbp), %rax
 	addq	%rdx, %rax
@@ -108,91 +106,95 @@ analyze_password:
 	movsbl	%al, %eax
 	movl	%eax, %edi
 	call	char_type
-	movl	%eax, -4(%rbp)
-	cmpl	$1, -4(%rbp)
+	movl	%eax, -28(%rbp)
+	cmpl	$1, -28(%rbp)
 	jne	.L8
-	movl	$1, -28(%rbp)
+	movl	$1, -4(%rbp)
 	jmp	.L9
 .L8:
-	cmpl	$2, -4(%rbp)
+	cmpl	$2, -28(%rbp)
 	jne	.L10
-	movl	$1, -24(%rbp)
+	movl	$1, -8(%rbp)
 	jmp	.L9
 .L10:
-	cmpl	$3, -4(%rbp)
+	cmpl	$3, -28(%rbp)
 	jne	.L11
-	movl	$1, -20(%rbp)
+	movl	$1, -12(%rbp)
 	jmp	.L9
 .L11:
 	movl	$1, -16(%rbp)
 .L9:
-	addl	$1, -8(%rbp)
+	addl	$1, -24(%rbp)
 .L7:
-	movl	-8(%rbp), %eax
+	movl	-24(%rbp), %eax
 	movslq	%eax, %rdx
 	movq	-40(%rbp), %rax
 	addq	%rdx, %rax
 	movzbl	(%rax), %eax
 	testb	%al, %al
 	jne	.L12
-	cmpl	$7, -8(%rbp)
+	cmpl	$7, -24(%rbp)
 	jle	.L13
-	addl	$1, -12(%rbp)
+	addl	$1, -20(%rbp)
 	jmp	.L14
 .L13:
-	movl	$.LC10, %edi
-	call	puts
+	leaq	.LC10(%rip), %rax
+	movq	%rax, %rdi
+	call	puts@PLT
 .L14:
-	cmpl	$0, -28(%rbp)
+	cmpl	$0, -4(%rbp)
 	je	.L15
-	addl	$1, -12(%rbp)
+	addl	$1, -20(%rbp)
 	jmp	.L16
 .L15:
-	movl	$.LC11, %edi
-	call	puts
+	leaq	.LC11(%rip), %rax
+	movq	%rax, %rdi
+	call	puts@PLT
 .L16:
-	cmpl	$0, -24(%rbp)
+	cmpl	$0, -8(%rbp)
 	je	.L17
-	addl	$1, -12(%rbp)
+	addl	$1, -20(%rbp)
 	jmp	.L18
 .L17:
-	movl	$.LC12, %edi
-	call	puts
+	leaq	.LC12(%rip), %rax
+	movq	%rax, %rdi
+	call	puts@PLT
 .L18:
-	cmpl	$0, -20(%rbp)
+	cmpl	$0, -12(%rbp)
 	je	.L19
-	addl	$1, -12(%rbp)
+	addl	$1, -20(%rbp)
 	jmp	.L20
 .L19:
-	movl	$.LC13, %edi
-	call	puts
+	leaq	.LC13(%rip), %rax
+	movq	%rax, %rdi
+	call	puts@PLT
 .L20:
 	cmpl	$0, -16(%rbp)
 	je	.L21
-	addl	$1, -12(%rbp)
+	addl	$1, -20(%rbp)
 	jmp	.L22
 .L21:
-	movl	$.LC14, %edi
-	call	puts
+	leaq	.LC14(%rip), %rax
+	movq	%rax, %rdi
+	call	puts@PLT
 .L22:
-	movl	-12(%rbp), %eax
+	movl	-20(%rbp), %eax
 	leave
 	ret
 	.size	analyze_password, .-analyze_password
 	.globl	shift_password
 	.type	shift_password, @function
 shift_password:
-	endbr64
 	pushq	%rbp
 	movq	%rsp, %rbp
 	subq	$40, %rsp
 	movq	%rdi, -24(%rbp)
 	movq	%rsi, -32(%rbp)
 	movl	%edx, -36(%rbp)
-	movl	$0, -8(%rbp)
+	movl	$0, -4(%rbp)
 	jmp	.L25
 .L30:
-	movl	-8(%rbp), %eax
+	movl	-4(%rbp), %eax
 	movslq	%eax, %rdx
 	movq	-24(%rbp), %rax
 	addq	%rdx, %rax
@@ -200,10 +202,10 @@ shift_password:
 	movsbl	%al, %eax
 	movl	%eax, %edi
 	call	char_type
-	movl	%eax, -4(%rbp)
-	cmpl	$1, -4(%rbp)
+	movl	%eax, -8(%rbp)
+	cmpl	$1, -8(%rbp)
 	jne	.L26
-	movl	-8(%rbp), %eax
+	movl	-4(%rbp), %eax
 	movslq	%eax, %rdx
 	movq	-24(%rbp), %rax
 	addq	%rdx, %rax
@@ -224,7 +226,7 @@ shift_password:
 	movl	%eax, %edx
 	movl	%edx, %eax
 	leal	97(%rax), %ecx
-	movl	-8(%rbp), %eax
+	movl	-4(%rbp), %eax
 	movslq	%eax, %rdx
 	movq	-32(%rbp), %rax
 	addq	%rdx, %rax
@@ -232,9 +234,9 @@ shift_password:
 	movb	%dl, (%rax)
 	jmp	.L27
 .L26:
-	cmpl	$2, -4(%rbp)
+	cmpl	$2, -8(%rbp)
 	jne	.L28
-	movl	-8(%rbp), %eax
+	movl	-4(%rbp), %eax
 	movslq	%eax, %rdx
 	movq	-24(%rbp), %rax
 	addq	%rdx, %rax
@@ -255,7 +257,7 @@ shift_password:
 	movl	%eax, %edx
 	movl	%edx, %eax
 	leal	65(%rax), %ecx
-	movl	-8(%rbp), %eax
+	movl	-4(%rbp), %eax
 	movslq	%eax, %rdx
 	movq	-32(%rbp), %rax
 	addq	%rdx, %rax
@@ -263,9 +265,9 @@ shift_password:
 	movb	%dl, (%rax)
 	jmp	.L27
 .L28:
-	cmpl	$3, -4(%rbp)
+	cmpl	$3, -8(%rbp)
 	jne	.L29
-	movl	-8(%rbp), %eax
+	movl	-4(%rbp), %eax
 	movslq	%eax, %rdx
 	movq	-24(%rbp), %rax
 	addq	%rdx, %rax
@@ -290,7 +292,7 @@ shift_password:
 	subl	%eax, %ecx
 	movl	%ecx, %eax
 	leal	48(%rax), %ecx
-	movl	-8(%rbp), %eax
+	movl	-4(%rbp), %eax
 	movslq	%eax, %rdx
 	movq	-32(%rbp), %rax
 	addq	%rdx, %rax
@@ -298,27 +300,27 @@ shift_password:
 	movb	%dl, (%rax)
 	jmp	.L27
 .L29:
-	movl	-8(%rbp), %eax
+	movl	-4(%rbp), %eax
 	movslq	%eax, %rdx
 	movq	-24(%rbp), %rax
 	addq	%rdx, %rax
-	movl	-8(%rbp), %edx
+	movl	-4(%rbp), %edx
 	movslq	%edx, %rcx
 	movq	-32(%rbp), %rdx
 	addq	%rcx, %rdx
 	movzbl	(%rax), %eax
 	movb	%al, (%rdx)
 .L27:
-	addl	$1, -8(%rbp)
+	addl	$1, -4(%rbp)
 .L25:
-	movl	-8(%rbp), %eax
+	movl	-4(%rbp), %eax
 	movslq	%eax, %rdx
 	movq	-24(%rbp), %rax
 	addq	%rdx, %rax
 	movzbl	(%rax), %eax
 	testb	%al, %al
 	jne	.L30
-	movl	-8(%rbp), %eax
+	movl	-4(%rbp), %eax
 	movslq	%eax, %rdx
 	movq	-32(%rbp), %rax
 	addq	%rdx, %rax
@@ -338,55 +340,49 @@ shift_password:
 	.globl	password_is_taken
 	.type	password_is_taken, @function
 password_is_taken:
-	endbr64
 	pushq	%rbp
 	movq	%rsp, %rbp
-	subq	$112, %rsp
-	movq	%rdi, -104(%rbp)
-	movq	%fs:40, %rax
-	movq	%rax, -8(%rbp)
-	xorl	%eax, %eax
-	movl	$.LC15, %esi
-	movl	$.LC16, %edi
-	call	fopen
-	movq	%rax, -88(%rbp)
-	movl	$0, -92(%rbp)
-	cmpq	$0, -88(%rbp)
+	subq	$96, %rsp
+	movq	%rdi, -88(%rbp)
+	leaq	.LC15(%rip), %rdx
+	leaq	.LC16(%rip), %rax
+	movq	%rdx, %rsi
+	movq	%rax, %rdi
+	call	fopen@PLT
+	movq	%rax, -16(%rbp)
+	movl	$0, -4(%rbp)
+	cmpq	$0, -16(%rbp)
 	jne	.L34
 	movl	$0, %eax
 	jmp	.L37
 .L36:
+	leaq	.LC17(%rip), %rdx
 	leaq	-80(%rbp), %rax
-	movl	$.LC17, %esi
-	movq	%rax, %rdi
-	call	strcspn
-	movb	$0, -80(%rbp,%rax)
-	leaq	-80(%rbp), %rdx
-	movq	-104(%rbp), %rax
 	movq	%rdx, %rsi
 	movq	%rax, %rdi
-	call	strcmp
+	call	strcspn@PLT
+	movb	$0, -80(%rbp,%rax)
+	leaq	-80(%rbp), %rdx
+	movq	-88(%rbp), %rax
+	movq	%rdx, %rsi
+	movq	%rax, %rdi
+	call	strcmp@PLT
 	testl	%eax, %eax
 	jne	.L34
-	movl	$1, -92(%rbp)
+	movl	$1, -4(%rbp)
 .L34:
-	movq	-88(%rbp), %rdx
+	movq	-16(%rbp), %rdx
 	leaq	-80(%rbp), %rax
 	movl	$64, %esi
 	movq	%rax, %rdi
-	call	fgets
+	call	fgets@PLT
 	testq	%rax, %rax
 	jne	.L36
-	movq	-88(%rbp), %rax
+	movq	-16(%rbp), %rax
 	movq	%rax, %rdi
-	call	fclose
-	movl	-92(%rbp), %eax
+	call	fclose@PLT
+	movl	-4(%rbp), %eax
 .L37:
-	movq	-8(%rbp), %rdx
-	subq	%fs:40, %rdx
-	je	.L38
-	call	__stack_chk_fail
-.L38:
 	leave
 	ret
 	.size	password_is_taken, .-password_is_taken
@@ -399,27 +395,29 @@ password_is_taken:
 	.globl	save_password
 	.type	save_password, @function
 save_password:
-	endbr64
 	pushq	%rbp
 	movq	%rsp, %rbp
 	subq	$32, %rsp
 	movq	%rdi, -24(%rbp)
-	movl	$.LC18, %esi
-	movl	$.LC16, %edi
-	call	fopen
+	leaq	.LC18(%rip), %rdx
+	leaq	.LC16(%rip), %rax
+	movq	%rdx, %rsi
+	movq	%rax, %rdi
+	call	fopen@PLT
 	movq	%rax, -8(%rbp)
 	cmpq	$0, -8(%rbp)
-	je	.L41
+	je	.L40
 	movq	-24(%rbp), %rdx
+	leaq	.LC19(%rip), %rcx
 	movq	-8(%rbp), %rax
-	movl	$.LC19, %esi
+	movq	%rcx, %rsi
 	movq	%rax, %rdi
 	movl	$0, %eax
-	call	fprintf
+	call	fprintf@PLT
 	movq	-8(%rbp), %rax
 	movq	%rax, %rdi
-	call	fclose
-.L41:
+	call	fclose@PLT
+.L40:
 	nop
 	leave
 	ret
@@ -427,19 +425,18 @@ save_password:
 	.globl	clear_input
 	.type	clear_input, @function
 clear_input:
-	endbr64
 	pushq	%rbp
 	movq	%rsp, %rbp
 	subq	$16, %rsp
 	nop
-.L44:
-	call	getchar
+.L43:
+	call	getchar@PLT
 	movl	%eax, -4(%rbp)
 	cmpl	$10, -4(%rbp)
-	je	.L45
+	je	.L44
 	cmpl	$-1, -4(%rbp)
-	jne	.L44
-.L45:
+	jne	.L43
+.L44:
 	nop
 	leave
 	ret
@@ -447,27 +444,26 @@ clear_input:
 	.globl	to_lowercase
 	.type	to_lowercase, @function
 to_lowercase:
-	endbr64
 	pushq	%rbp
 	movq	%rsp, %rbp
 	movq	%rdi, -24(%rbp)
 	movl	$0, -4(%rbp)
-	jmp	.L47
-.L49:
+	jmp	.L46
+.L48:
 	movl	-4(%rbp), %eax
 	movslq	%eax, %rdx
 	movq	-24(%rbp), %rax
 	addq	%rdx, %rax
 	movzbl	(%rax), %eax
 	cmpb	$64, %al
-	jle	.L48
+	jle	.L47
 	movl	-4(%rbp), %eax
 	movslq	%eax, %rdx
 	movq	-24(%rbp), %rax
 	addq	%rdx, %rax
 	movzbl	(%rax), %eax
 	cmpb	$90, %al
-	jg	.L48
+	jg	.L47
 	movl	-4(%rbp), %eax
 	movslq	%eax, %rdx
 	movq	-24(%rbp), %rax
@@ -480,16 +476,16 @@ to_lowercase:
 	addq	%rdx, %rax
 	movl	%ecx, %edx
 	movb	%dl, (%rax)
-.L48:
-	addl	$1, -4(%rbp)
 .L47:
+	addl	$1, -4(%rbp)
+.L46:
 	movl	-4(%rbp), %eax
 	movslq	%eax, %rdx
 	movq	-24(%rbp), %rax
 	addq	%rdx, %rax
 	movzbl	(%rax), %eax
 	testb	%al, %al
-	jne	.L49
+	jne	.L48
 	nop
 	nop
 	popq	%rbp
@@ -513,70 +509,67 @@ to_lowercase:
 	.globl	ask_yes_no
 	.type	ask_yes_no, @function
 ask_yes_no:
-	endbr64
 	pushq	%rbp
 	movq	%rsp, %rbp
-	subq	$32, %rsp
-	movq	%fs:40, %rax
-	movq	%rax, -8(%rbp)
-	xorl	%eax, %eax
-.L57:
-	leaq	-32(%rbp), %rax
+	subq	$16, %rsp
+.L56:
+	leaq	-16(%rbp), %rax
+	leaq	.LC20(%rip), %rdx
 	movq	%rax, %rsi
-	movl	$.LC20, %edi
+	movq	%rdx, %rdi
 	movl	$0, %eax
-	call	__isoc23_scanf
+	call	__isoc23_scanf@PLT
 	cmpl	$1, %eax
-	je	.L51
+	je	.L50
 	movl	$0, %eax
-	jmp	.L58
-.L51:
+	jmp	.L57
+.L50:
 	call	clear_input
-	leaq	-32(%rbp), %rax
+	leaq	-16(%rbp), %rax
 	movq	%rax, %rdi
 	call	to_lowercase
-	leaq	-32(%rbp), %rax
-	movl	$.LC21, %esi
+	leaq	.LC21(%rip), %rdx
+	leaq	-16(%rbp), %rax
+	movq	%rdx, %rsi
 	movq	%rax, %rdi
-	call	strcmp
+	call	strcmp@PLT
 	testl	%eax, %eax
-	je	.L53
-	leaq	-32(%rbp), %rax
-	movl	$.LC22, %esi
+	je	.L52
+	leaq	.LC22(%rip), %rdx
+	leaq	-16(%rbp), %rax
+	movq	%rdx, %rsi
 	movq	%rax, %rdi
-	call	strcmp
+	call	strcmp@PLT
 	testl	%eax, %eax
-	jne	.L54
-.L53:
+	jne	.L53
+.L52:
 	movl	$1, %eax
-	jmp	.L58
-.L54:
-	leaq	-32(%rbp), %rax
-	movl	$.LC23, %esi
-	movq	%rax, %rdi
-	call	strcmp
-	testl	%eax, %eax
-	je	.L55
-	leaq	-32(%rbp), %rax
-	movl	$.LC24, %esi
-	movq	%rax, %rdi
-	call	strcmp
-	testl	%eax, %eax
-	jne	.L56
-.L55:
-	movl	$0, %eax
-	jmp	.L58
-.L56:
-	movl	$.LC25, %edi
-	movl	$0, %eax
-	call	printf
 	jmp	.L57
-.L58:
-	movq	-8(%rbp), %rdx
-	subq	%fs:40, %rdx
-	je	.L59
-	call	__stack_chk_fail
-.L59:
+.L53:
+	leaq	.LC23(%rip), %rdx
+	leaq	-16(%rbp), %rax
+	movq	%rdx, %rsi
+	movq	%rax, %rdi
+	call	strcmp@PLT
+	testl	%eax, %eax
+	je	.L54
+	leaq	.LC24(%rip), %rdx
+	leaq	-16(%rbp), %rax
+	movq	%rdx, %rsi
+	movq	%rax, %rdi
+	call	strcmp@PLT
+	testl	%eax, %eax
+	jne	.L55
+.L54:
+	movl	$0, %eax
+	jmp	.L57
+.L55:
+	leaq	.LC25(%rip), %rax
+	movq	%rax, %rdi
+	movl	$0, %eax
+	call	printf@PLT
+	jmp	.L56
+.L57:
 	leave
 	ret
 	.size	ask_yes_no, .-ask_yes_no
@@ -598,15 +591,11 @@ ask_yes_no:
 	.globl	suggest_password
 	.type	suggest_password, @function
 suggest_password:
-	endbr64
 	pushq	%rbp
 	movq	%rsp, %rbp
-	subq	$96, %rsp
-	movq	%fs:40, %rax
-	movq	%rax, -8(%rbp)
-	xorl	%eax, %eax
+	subq	$80, %rsp
 	movl	$0, %edi
-	call	time
+	call	time@PLT
 	movq	%rax, %rcx
 	movabsq	$-6640827866535438581, %rdx
 	movq	%rcx, %rax
@@ -626,9 +615,9 @@ suggest_password:
 	movq	%rcx, %rdx
 	movl	%edx, %eax
 	addl	$1, %eax
-	movl	%eax, -88(%rbp)
-	movl	$0, -84(%rbp)
-	movl	-88(%rbp), %ecx
+	movl	%eax, -4(%rbp)
+	movl	$0, -8(%rbp)
+	movl	-4(%rbp), %ecx
 	movslq	%ecx, %rax
 	imulq	$1717986919, %rax, %rax
 	shrq	$32, %rax
@@ -644,15 +633,17 @@ suggest_password:
 	subl	%eax, %ecx
 	movl	%ecx, %edx
 	movslq	%edx, %rax
-	movq	base_passwords(,%rax,8), %rax
-	movl	-88(%rbp), %edx
+	leaq	0(,%rax,8), %rdx
+	leaq	base_passwords(%rip), %rax
+	movq	(%rdx,%rax), %rax
+	movl	-4(%rbp), %edx
 	leaq	-80(%rbp), %rcx
 	movq	%rcx, %rsi
 	movq	%rax, %rdi
 	call	shift_password
-	jmp	.L61
-.L63:
-	movl	-88(%rbp), %ecx
+	jmp	.L59
+.L61:
+	movl	-4(%rbp), %ecx
 	movslq	%ecx, %rax
 	imulq	$1374389535, %rax, %rax
 	shrq	$32, %rax
@@ -669,8 +660,8 @@ suggest_password:
 	subl	%eax, %ecx
 	movl	%ecx, %edx
 	leal	1(%rdx), %eax
-	movl	%eax, -88(%rbp)
-	movl	-88(%rbp), %ecx
+	movl	%eax, -4(%rbp)
+	movl	-4(%rbp), %ecx
 	movslq	%ecx, %rax
 	imulq	$1717986919, %rax, %rax
 	shrq	$32, %rax
@@ -686,61 +677,63 @@ suggest_password:
 	subl	%eax, %ecx
 	movl	%ecx, %edx
 	movslq	%edx, %rax
-	movq	base_passwords(,%rax,8), %rax
-	movl	-88(%rbp), %edx
+	leaq	0(,%rax,8), %rdx
+	leaq	base_passwords(%rip), %rax
+	movq	(%rdx,%rax), %rax
+	movl	-4(%rbp), %edx
 	leaq	-80(%rbp), %rcx
 	movq	%rcx, %rsi
 	movq	%rax, %rdi
 	call	shift_password
-	addl	$1, -84(%rbp)
-.L61:
+	addl	$1, -8(%rbp)
+.L59:
 	leaq	-80(%rbp), %rax
 	movq	%rax, %rdi
 	call	password_is_taken
 	testl	%eax, %eax
-	je	.L62
-	cmpl	$24, -84(%rbp)
-	jle	.L63
-.L62:
+	je	.L60
+	cmpl	$24, -8(%rbp)
+	jle	.L61
+.L60:
 	leaq	-80(%rbp), %rax
+	leaq	.LC26(%rip), %rdx
 	movq	%rax, %rsi
-	movl	$.LC26, %edi
+	movq	%rdx, %rdi
 	movl	$0, %eax
-	call	printf
-	movl	$.LC27, %edi
+	call	printf@PLT
+	leaq	.LC27(%rip), %rax
+	movq	%rax, %rdi
 	movl	$0, %eax
-	call	printf
+	call	printf@PLT
 	call	ask_yes_no
 	testl	%eax, %eax
-	je	.L64
+	je	.L62
 	leaq	-80(%rbp), %rax
 	movq	%rax, %rdi
 	call	analyze_password
 	cmpl	$5, %eax
-	jne	.L65
-	movl	$.LC28, %edi
-	call	puts
-.L65:
+	jne	.L63
+	leaq	.LC28(%rip), %rax
+	movq	%rax, %rdi
+	call	puts@PLT
+.L63:
 	leaq	-80(%rbp), %rax
+	leaq	.LC29(%rip), %rdx
 	movq	%rax, %rsi
-	movl	$.LC29, %edi
+	movq	%rdx, %rdi
 	movl	$0, %eax
-	call	printf
+	call	printf@PLT
 	leaq	-80(%rbp), %rax
 	movq	%rax, %rdi
 	call	save_password
 	movl	$1, %eax
-	jmp	.L67
-.L64:
-	movl	$.LC30, %edi
-	call	puts
+	jmp	.L65
+.L62:
+	leaq	.LC30(%rip), %rax
+	movq	%rax, %rdi
+	call	puts@PLT
 	movl	$0, %eax
-.L67:
-	movq	-8(%rbp), %rdx
-	subq	%fs:40, %rdx
-	je	.L68
-	call	__stack_chk_fail
-.L68:
+.L65:
 	leave
 	ret
 	.size	suggest_password, .-suggest_password
@@ -786,127 +779,116 @@ suggest_password:
 	.globl	main
 	.type	main, @function
 main:
-	endbr64
 	pushq	%rbp
 	movq	%rsp, %rbp
 	subq	$96, %rsp
-	movq	%fs:40, %rax
-	movq	%rax, -8(%rbp)
-	xorl	%eax, %eax
-	movl	$0, -88(%rbp)
-	movl	$.LC31, %edi
-	call	puts
-.L78:
-	movl	$.LC32, %edi
+	movl	$0, -4(%rbp)
+	leaq	.LC31(%rip), %rax
+	movq	%rax, %rdi
+	call	puts@PLT
+.L75:
+	leaq	.LC32(%rip), %rax
+	movq	%rax, %rdi
 	movl	$0, %eax
-	call	printf
-	leaq	-89(%rbp), %rax
+	call	printf@PLT
+	leaq	-81(%rbp), %rax
+	leaq	.LC33(%rip), %rdx
 	movq	%rax, %rsi
-	movl	$.LC33, %edi
+	movq	%rdx, %rdi
 	movl	$0, %eax
-	call	__isoc23_scanf
+	call	__isoc23_scanf@PLT
 	call	clear_input
-	movzbl	-89(%rbp), %eax
+	movzbl	-81(%rbp), %eax
 	cmpb	$49, %al
-	jne	.L70
-	movl	$.LC34, %edi
+	jne	.L67
+	leaq	.LC34(%rip), %rax
+	movq	%rax, %rdi
 	movl	$0, %eax
-	call	printf
+	call	printf@PLT
 	leaq	-80(%rbp), %rax
+	leaq	.LC35(%rip), %rdx
 	movq	%rax, %rsi
-	movl	$.LC35, %edi
+	movq	%rdx, %rdi
 	movl	$0, %eax
-	call	__isoc23_scanf
-	call	getchar
+	call	__isoc23_scanf@PLT
+	call	getchar@PLT
 	cmpl	$10, %eax
-	je	.L71
+	je	.L68
 	call	clear_input
-	movl	$.LC36, %edi
-	call	puts
-	jmp	.L72
-.L71:
+	leaq	.LC36(%rip), %rax
+	movq	%rax, %rdi
+	call	puts@PLT
+	jmp	.L69
+.L68:
 	leaq	-80(%rbp), %rax
 	movq	%rax, %rdi
-	call	strlen
+	call	strlen@PLT
 	cmpq	$3, %rax
-	ja	.L73
+	ja	.L70
+	leaq	.LC37(%rip), %rax
 	movl	$4, %esi
-	movl	$.LC37, %edi
+	movq	%rax, %rdi
 	movl	$0, %eax
-	call	printf
-	jmp	.L72
-.L73:
+	call	printf@PLT
+	jmp	.L69
+.L70:
 	movl	$10, %edi
-	call	putchar
+	call	putchar@PLT
 	leaq	-80(%rbp), %rax
 	movq	%rax, %rdi
 	call	analyze_password
-	movl	%eax, -84(%rbp)
-	cmpl	$2, -84(%rbp)
-	jg	.L74
-	movl	$.LC38, %edi
-	call	puts
-	jmp	.L72
-.L74:
-	cmpl	$4, -84(%rbp)
-	jg	.L75
-	movl	$.LC39, %edi
-	call	puts
-	jmp	.L72
-.L75:
-	movl	$.LC40, %edi
-	call	puts
-	movl	$.LC41, %edi
-	call	puts
-	movl	$1, -88(%rbp)
-	jmp	.L72
-.L70:
-	movzbl	-89(%rbp), %eax
-	cmpb	$50, %al
-	jne	.L76
-	call	suggest_password
-	movl	%eax, -88(%rbp)
-	jmp	.L72
-.L76:
-	movzbl	-89(%rbp), %eax
-	cmpb	$51, %al
-	jne	.L77
-	movl	$.LC42, %edi
-	call	puts
-	movl	$1, -88(%rbp)
-	jmp	.L72
-.L77:
-	movl	$.LC43, %edi
-	call	puts
+	movl	%eax, -8(%rbp)
+	cmpl	$2, -8(%rbp)
+	jg	.L71
+	leaq	.LC38(%rip), %rax
+	movq	%rax, %rdi
+	call	puts@PLT
+	jmp	.L69
+.L71:
+	cmpl	$4, -8(%rbp)
+	jg	.L72
+	leaq	.LC39(%rip), %rax
+	movq	%rax, %rdi
+	call	puts@PLT
+	jmp	.L69
 .L72:
-	cmpl	$0, -88(%rbp)
-	je	.L78
-	movl	$.LC44, %edi
-	call	puts
+	leaq	.LC40(%rip), %rax
+	movq	%rax, %rdi
+	call	puts@PLT
+	leaq	.LC41(%rip), %rax
+	movq	%rax, %rdi
+	call	puts@PLT
+	movl	$1, -4(%rbp)
+	jmp	.L69
+.L67:
+	movzbl	-81(%rbp), %eax
+	cmpb	$50, %al
+	jne	.L73
+	call	suggest_password
+	movl	%eax, -4(%rbp)
+	jmp	.L69
+.L73:
+	movzbl	-81(%rbp), %eax
+	cmpb	$51, %al
+	jne	.L74
+	leaq	.LC42(%rip), %rax
+	movq	%rax, %rdi
+	call	puts@PLT
+	movl	$1, -4(%rbp)
+	jmp	.L69
+.L74:
+	leaq	.LC43(%rip), %rax
+	movq	%rax, %rdi
+	call	puts@PLT
+.L69:
+	cmpl	$0, -4(%rbp)
+	je	.L75
+	leaq	.LC44(%rip), %rax
+	movq	%rax, %rdi
+	call	puts@PLT
 	movl	$0, %eax
-	movq	-8(%rbp), %rdx
-	subq	%fs:40, %rdx
-	je	.L80
-	call	__stack_chk_fail
-.L80:
 	leave
 	ret
 	.size	main, .-main
 	.ident	"GCC: (Ubuntu 15.2.0-16ubuntu1) 15.2.0"
 	.section	.note.GNU-stack,"",@progbits
-	.section	.note.gnu.property,"a"
-	.align 8
-	.long	1f - 0f
-	.long	4f - 1f
-	.long	5
-0:
-	.string	"GNU"
-1:
-	.align 8
-	.long	0xc0000002
-	.long	3f - 2f
-2:
-	.long	0x3
-3:
-	.align 8
-4:
