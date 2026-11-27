@@ -49,6 +49,16 @@ void clear_input(void) {
     while (c != '\n' && c != EOF) c = getchar();
 }
 
+int is_english(const char *pass) {
+    int i = 0;
+
+    while (pass[i] != '\0') {
+        if (pass[i] < 32 || pass[i] > 126) return 0;
+        i++;
+    }
+    return 1;
+}
+
 int main(void) {
     char pass[SIZE];
     char choice;
@@ -76,6 +86,8 @@ int main(void) {
             if (getchar() != '\n') {
                 clear_input();
                 printf("No spaces allowed (and max 63 characters). Please try again.\n");
+            } else if (!is_english(pass)) {
+                printf("Use English letters, numbers and symbols only.\n");
             } else if (strlen(pass) < MIN_OK) {
                 printf("Too short! Use at least %d characters.\n", MIN_OK);
             } else {
