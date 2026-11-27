@@ -53,7 +53,7 @@ int is_english(const char *pass) {
     int i = 0;
 
     while (pass[i] != '\0') {
-        if (pass[i] < 32 || pass[i] > 126) return 0;
+        if (pass[i] < 32 || pass[i] > 126 || pass[i] == '?') return 0;
         i++;
     }
     return 1;
