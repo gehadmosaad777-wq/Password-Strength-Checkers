@@ -9,10 +9,6 @@
 #define DIGIT      3
 #define SPECIAL    4
 
-/* char_type
-   Purpose: find the type of a character.
-   Input:   c = one character.
-   Output:  1 lowercase, 2 uppercase, 3 digit, 4 special. */
 int char_type(char c) {
     if (c >= 'a' && c <= 'z') return LOWER;
     else if (c >= 'A' && c <= 'Z') return UPPER;
@@ -20,20 +16,15 @@ int char_type(char c) {
     else return SPECIAL;
 }
 
-/* analyze_password
-   Purpose: give the password a score from 0 to 5 (1 point for each rule)
-            and print a hint for each missing rule.
-   Input:   pass = the password.
-   Output:  the score (0 to 5). */
 int analyze_password(const char *pass) {
     int lower = 0, upper = 0, digit = 0, special = 0, score = 0, i = 0;
 
     while (pass[i] != '\0') {
-        int t = char_type(pass[i]);
+        int type = char_type(pass[i]);
 
-        if (t == LOWER) lower = 1;
-        else if (t == UPPER) upper = 1;
-        else if (t == DIGIT) digit = 1;
+        if (type == LOWER) lower = 1;
+        else if (type == UPPER) upper = 1;
+        else if (type == DIGIT) digit = 1;
         else special = 1;
         i++;
     }
@@ -52,21 +43,12 @@ int analyze_password(const char *pass) {
     return score;
 }
 
-/* clear_input
-   Purpose: remove the rest of the typed line.
-   Input:   none (reads from the keyboard).
-   Output:  none. */
 void clear_input(void) {
     int c = getchar();
 
     while (c != '\n' && c != EOF) c = getchar();
 }
 
-/* main
-   Purpose: ask for passwords and show WEAK, MODERATE or STRONG
-            until the password is strong or the user exits.
-   Input:   none.
-   Output:  0 when the program ends. */
 int main(void) {
     char pass[SIZE];
     char choice;
