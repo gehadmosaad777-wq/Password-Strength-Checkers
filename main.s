@@ -1,324 +1,267 @@
-"char_type":
-        push    rbp
-        mov     rbp, rsp
-        mov     BYTE PTR [rbp-1], dil
-        cmp     BYTE PTR [rbp-1], 96
-        jle     .L2
-        cmp     BYTE PTR [rbp-1], 122
-        jg      .L2
-        mov     eax, 1
-        jmp     .L3
+	.file	"main.c"
+	.intel_syntax noprefix
+	.text
+	.globl	char_type
+	.def	char_type;	.scl	2;	.type	32;	.endef
+	.seh_proc	char_type
+char_type:
+	push	rbp
+	.seh_pushreg	rbp
+	mov	rbp, rsp
+	.seh_setframe	rbp, 0
+	.seh_endprologue
+	mov	eax, ecx
+	mov	BYTE PTR 16[rbp], al
+	cmp	BYTE PTR 16[rbp], 96
+	jle	.L2
+	cmp	BYTE PTR 16[rbp], 122
+	jg	.L2
+	mov	eax, 1
+	jmp	.L3
 .L2:
-        cmp     BYTE PTR [rbp-1], 64
-        jle     .L4
-        cmp     BYTE PTR [rbp-1], 90
-        jg      .L4
-        mov     eax, 2
-        jmp     .L3
+	cmp	BYTE PTR 16[rbp], 64
+	jle	.L4
+	cmp	BYTE PTR 16[rbp], 90
+	jg	.L4
+	mov	eax, 2
+	jmp	.L3
 .L4:
-        cmp     BYTE PTR [rbp-1], 47
-        jle     .L5
-        cmp     BYTE PTR [rbp-1], 57
-        jg      .L5
-        mov     eax, 3
-        jmp     .L3
+	cmp	BYTE PTR 16[rbp], 47
+	jle	.L5
+	cmp	BYTE PTR 16[rbp], 57
+	jg	.L5
+	mov	eax, 3
+	jmp	.L3
 .L5:
-        mov     eax, 4
+	mov	eax, 4
 .L3:
-        pop     rbp
-        ret
+	pop	rbp
+	ret
+	.seh_endproc
+	.section .rdata,"dr"
+	.align 8
 .LC0:
-        .string "  - Use at least 8 characters"
+	.ascii "  - Use at least 8 characters\12\0"
 .LC1:
-        .string "  - Add a lowercase letter"
+	.ascii "  - Add a lowercase letter\12\0"
 .LC2:
-        .string "  - Add an uppercase letter"
+	.ascii "  - Add an uppercase letter\12\0"
 .LC3:
-        .string "  - Add a digit"
+	.ascii "  - Add a digit\12\0"
+	.align 8
 .LC4:
-        .string "  - Add a special character (! @ # $ ...)"
-"analyze_password":
-        push    rbp
-        mov     rbp, rsp
-        sub     rsp, 48
-        mov     QWORD PTR [rbp-40], rdi
-        mov     DWORD PTR [rbp-4], 0
-        mov     DWORD PTR [rbp-8], 0
-        mov     DWORD PTR [rbp-12], 0
-        mov     DWORD PTR [rbp-16], 0
-        mov     DWORD PTR [rbp-20], 0
-        mov     DWORD PTR [rbp-24], 0
-        jmp     .L7
+	.ascii "  - Add a special character (! @ # $ ...)\12\0"
+	.text
+	.globl	analyze_password
+	.def	analyze_password;	.scl	2;	.type	32;	.endef
+	.seh_proc	analyze_password
+analyze_password:
+	push	rbp
+	.seh_pushreg	rbp
+	mov	rbp, rsp
+	.seh_setframe	rbp, 0
+	sub	rsp, 64
+	.seh_stackalloc	64
+	.seh_endprologue
+	mov	QWORD PTR 16[rbp], rcx
+	mov	DWORD PTR -4[rbp], 0
+	mov	DWORD PTR -8[rbp], 0
+	mov	DWORD PTR -12[rbp], 0
+	mov	DWORD PTR -16[rbp], 0
+	mov	DWORD PTR -20[rbp], 0
+	mov	DWORD PTR -24[rbp], 0
+	jmp	.L7
 .L12:
-        mov     eax, DWORD PTR [rbp-24]
-        movsxd  rdx, eax
-        mov     rax, QWORD PTR [rbp-40]
-        add     rax, rdx
-        movzx   eax, BYTE PTR [rax]
-        movsx   eax, al
-        mov     edi, eax
-        call    "char_type"
-        mov     DWORD PTR [rbp-28], eax
-        cmp     DWORD PTR [rbp-28], 1
-        jne     .L8
-        mov     DWORD PTR [rbp-4], 1
-        jmp     .L9
+	mov	eax, DWORD PTR -24[rbp]
+	movsx	rdx, eax
+	mov	rax, QWORD PTR 16[rbp]
+	add	rax, rdx
+	movzx	eax, BYTE PTR [rax]
+	movsx	eax, al
+	mov	ecx, eax
+	call	char_type
+	mov	DWORD PTR -28[rbp], eax
+	cmp	DWORD PTR -28[rbp], 1
+	jne	.L8
+	mov	DWORD PTR -4[rbp], 1
+	jmp	.L9
 .L8:
-        cmp     DWORD PTR [rbp-28], 2
-        jne     .L10
-        mov     DWORD PTR [rbp-8], 1
-        jmp     .L9
+	cmp	DWORD PTR -28[rbp], 2
+	jne	.L10
+	mov	DWORD PTR -8[rbp], 1
+	jmp	.L9
 .L10:
-        cmp     DWORD PTR [rbp-28], 3
-        jne     .L11
-        mov     DWORD PTR [rbp-12], 1
-        jmp     .L9
+	cmp	DWORD PTR -28[rbp], 3
+	jne	.L11
+	mov	DWORD PTR -12[rbp], 1
+	jmp	.L9
 .L11:
-        mov     DWORD PTR [rbp-16], 1
+	mov	DWORD PTR -16[rbp], 1
 .L9:
-        add     DWORD PTR [rbp-24], 1
+	add	DWORD PTR -24[rbp], 1
 .L7:
-        mov     eax, DWORD PTR [rbp-24]
-        movsxd  rdx, eax
-        mov     rax, QWORD PTR [rbp-40]
-        add     rax, rdx
-        movzx   eax, BYTE PTR [rax]
-        test    al, al
-        jne     .L12
-        cmp     DWORD PTR [rbp-24], 7
-        jle     .L13
-        add     DWORD PTR [rbp-20], 1
-        jmp     .L14
+	mov	eax, DWORD PTR -24[rbp]
+	movsx	rdx, eax
+	mov	rax, QWORD PTR 16[rbp]
+	add	rax, rdx
+	movzx	eax, BYTE PTR [rax]
+	test	al, al
+	jne	.L12
+	cmp	DWORD PTR -24[rbp], 7
+	jle	.L13
+	add	DWORD PTR -20[rbp], 1
+	jmp	.L14
 .L13:
-        mov     edi, OFFSET FLAT:.LC0
-        call    "puts"
+	lea	rax, .LC0[rip]
+	mov	rcx, rax
+	call	__mingw_printf
 .L14:
-        cmp     DWORD PTR [rbp-4], 0
-        je      .L15
-        add     DWORD PTR [rbp-20], 1
-        jmp     .L16
+	cmp	DWORD PTR -4[rbp], 0
+	je	.L15
+	add	DWORD PTR -20[rbp], 1
+	jmp	.L16
 .L15:
-        mov     edi, OFFSET FLAT:.LC1
-        call    "puts"
+	lea	rax, .LC1[rip]
+	mov	rcx, rax
+	call	__mingw_printf
 .L16:
-        cmp     DWORD PTR [rbp-8], 0
-        je      .L17
-        add     DWORD PTR [rbp-20], 1
-        jmp     .L18
+	cmp	DWORD PTR -8[rbp], 0
+	je	.L17
+	add	DWORD PTR -20[rbp], 1
+	jmp	.L18
 .L17:
-        mov     edi, OFFSET FLAT:.LC2
-        call    "puts"
+	lea	rax, .LC2[rip]
+	mov	rcx, rax
+	call	__mingw_printf
 .L18:
-        cmp     DWORD PTR [rbp-12], 0
-        je      .L19
-        add     DWORD PTR [rbp-20], 1
-        jmp     .L20
+	cmp	DWORD PTR -12[rbp], 0
+	je	.L19
+	add	DWORD PTR -20[rbp], 1
+	jmp	.L20
 .L19:
-        mov     edi, OFFSET FLAT:.LC3
-        call    "puts"
+	lea	rax, .LC3[rip]
+	mov	rcx, rax
+	call	__mingw_printf
 .L20:
-        cmp     DWORD PTR [rbp-16], 0
-        je      .L21
-        add     DWORD PTR [rbp-20], 1
-        jmp     .L22
+	cmp	DWORD PTR -16[rbp], 0
+	je	.L21
+	add	DWORD PTR -20[rbp], 1
+	jmp	.L22
 .L21:
-        mov     edi, OFFSET FLAT:.LC4
-        call    "puts"
+	lea	rax, .LC4[rip]
+	mov	rcx, rax
+	call	__mingw_printf
 .L22:
-        mov     eax, DWORD PTR [rbp-20]
-        leave
-        ret
-"clear_input":
-        push    rbp
-        mov     rbp, rsp
-        sub     rsp, 16
-        call    "getchar"
-        mov     DWORD PTR [rbp-4], eax
-        jmp     .L25
-.L27:
-        call    "getchar"
-        mov     DWORD PTR [rbp-4], eax
-.L25:
-        cmp     DWORD PTR [rbp-4], 10
-        je      .L28
-        cmp     DWORD PTR [rbp-4], -1
-        jne     .L27
-.L28:
-        nop
-        leave
-        ret
-"is_english":
-        push    rbp
-        mov     rbp, rsp
-        mov     QWORD PTR [rbp-24], rdi
-        mov     DWORD PTR [rbp-4], 0
-        jmp     .L30
-.L34:
-        mov     eax, DWORD PTR [rbp-4]
-        movsxd  rdx, eax
-        mov     rax, QWORD PTR [rbp-24]
-        add     rax, rdx
-        movzx   eax, BYTE PTR [rax]
-        cmp     al, 31
-        jle     .L31
-        mov     eax, DWORD PTR [rbp-4]
-        movsxd  rdx, eax
-        mov     rax, QWORD PTR [rbp-24]
-        add     rax, rdx
-        movzx   eax, BYTE PTR [rax]
-        cmp     al, 127
-        je      .L31
-        mov     eax, DWORD PTR [rbp-4]
-        movsxd  rdx, eax
-        mov     rax, QWORD PTR [rbp-24]
-        add     rax, rdx
-        movzx   eax, BYTE PTR [rax]
-        cmp     al, 63
-        jne     .L32
-.L31:
-        mov     eax, 0
-        jmp     .L33
-.L32:
-        add     DWORD PTR [rbp-4], 1
-.L30:
-        mov     eax, DWORD PTR [rbp-4]
-        movsxd  rdx, eax
-        mov     rax, QWORD PTR [rbp-24]
-        add     rax, rdx
-        movzx   eax, BYTE PTR [rax]
-        test    al, al
-        jne     .L34
-        mov     eax, 1
-.L33:
-        pop     rbp
-        ret
+	mov	eax, DWORD PTR -20[rbp]
+	add	rsp, 64
+	pop	rbp
+	ret
+	.seh_endproc
+	.section .rdata,"dr"
+	.align 8
 .LC5:
-        .string "PASSWORD STRENGTH CHECKER\nRules (1 point each):\n  1. At least 8 characters\n  2. A lowercase letter\n  3. An uppercase letter\n  4. A digit\n  5. A special character (! @ # $ ...)"
+	.ascii "PASSWORD STRENGTH CHECKER\12Rules (1 point each):\12  1. At least 8 characters\12  2. A lowercase letter\12  3. An uppercase letter\12  4. A digit\12  5. A special character (! @ # $ ...)\12\0"
+	.align 8
 .LC6:
-        .string "\n1. Check a password\n2. Exit\nYour choice: "
+	.ascii "Enter a password (no spaces, max 64 chars): \0"
 .LC7:
-        .string " %c"
+	.ascii "%64s\0"
 .LC8:
-        .string "Enter a password (no spaces, max 63 chars): "
+	.ascii "%*[^\12]\0"
+	.align 8
 .LC9:
-        .string "%63s"
+	.ascii "No spaces allowed (and max 64 characters). Please try again.\12\0"
+	.align 8
 .LC10:
-        .string "No spaces allowed (and max 63 characters). Please try again."
+	.ascii "Too short! Use at least %d characters.\12\0"
 .LC11:
-        .string "Use English letters, numbers and symbols only."
+	.ascii "Result : WEAK\12\0"
 .LC12:
-        .string "Too short! Use at least %d characters.\n"
+	.ascii "Result : MODERATE\12\0"
 .LC13:
-        .string "Result : WEAK"
+	.ascii "Result : STRONG\12\0"
 .LC14:
-        .string "Result : MODERATE"
-.LC15:
-        .string "Result : STRONG"
-.LC16:
-        .string "Goodbye!"
-.LC17:
-        .string "Invalid choice, please enter 1 or 2."
-"main":
-        push    rbp
-        mov     rbp, rsp
-        sub     rsp, 96
-        mov     DWORD PTR [rbp-4], 0
-        mov     edi, OFFSET FLAT:.LC5
-        call    "puts"
-.L47:
-        mov     edi, OFFSET FLAT:.LC6
-        mov     eax, 0
-        call    "printf"
-        lea     rax, [rbp-81]
-        mov     rsi, rax
-        mov     edi, OFFSET FLAT:.LC7
-        mov     eax, 0
-        call    __isoc23_scanf
-        cmp     eax, 1
-        jne     .L49
-        call    "clear_input"
-        movzx   eax, BYTE PTR [rbp-81]
-        cmp     al, 49
-        jne     .L38
-        mov     edi, OFFSET FLAT:.LC8
-        mov     eax, 0
-        call    "printf"
-        lea     rax, [rbp-80]
-        mov     rsi, rax
-        mov     edi, OFFSET FLAT:.LC9
-        mov     eax, 0
-        call    __isoc23_scanf
-        cmp     eax, 1
-        jne     .L50
-        call    "getchar"
-        cmp     eax, 10
-        je      .L40
-        call    "clear_input"
-        mov     edi, OFFSET FLAT:.LC10
-        call    "puts"
-        jmp     .L41
-.L40:
-        lea     rax, [rbp-80]
-        mov     rdi, rax
-        call    "is_english"
-        test    eax, eax
-        jne     .L42
-        mov     edi, OFFSET FLAT:.LC11
-        call    "puts"
-        jmp     .L41
-.L42:
-        lea     rax, [rbp-80]
-        mov     rdi, rax
-        call    "strlen"
-        cmp     rax, 3
-        ja      .L43
-        mov     esi, 4
-        mov     edi, OFFSET FLAT:.LC12
-        mov     eax, 0
-        call    "printf"
-        jmp     .L41
-.L43:
-        lea     rax, [rbp-80]
-        mov     rdi, rax
-        call    "analyze_password"
-        mov     DWORD PTR [rbp-8], eax
-        cmp     DWORD PTR [rbp-8], 2
-        jg      .L44
-        mov     edi, OFFSET FLAT:.LC13
-        call    "puts"
-        jmp     .L41
-.L44:
-        cmp     DWORD PTR [rbp-8], 4
-        jg      .L45
-        mov     edi, OFFSET FLAT:.LC14
-        call    "puts"
-        jmp     .L41
-.L45:
-        mov     edi, OFFSET FLAT:.LC15
-        call    "puts"
-        mov     DWORD PTR [rbp-4], 1
-        jmp     .L41
-.L38:
-        movzx   eax, BYTE PTR [rbp-81]
-        cmp     al, 50
-        jne     .L46
-        mov     edi, OFFSET FLAT:.LC16
-        call    "puts"
-        mov     DWORD PTR [rbp-4], 1
-        jmp     .L41
-.L46:
-        mov     edi, OFFSET FLAT:.LC17
-        call    "puts"
-.L41:
-        cmp     DWORD PTR [rbp-4], 0
-        je      .L47
-        jmp     .L37
-.L49:
-        nop
-        jmp     .L37
-.L50:
-        nop
-.L37:
-        mov     eax, 0
-        leave
-        ret
+	.ascii "\12Press Enter to close...\12\0"
+	.text
+	.globl	main
+	.def	main;	.scl	2;	.type	32;	.endef
+	.seh_proc	main
+main:
+	push	rbp
+	.seh_pushreg	rbp
+	mov	rbp, rsp
+	.seh_setframe	rbp, 0
+	sub	rsp, 112
+	.seh_stackalloc	112
+	.seh_endprologue
+	call	__main
+	lea	rax, .LC5[rip]
+	mov	rcx, rax
+	call	__mingw_printf
+	lea	rax, .LC6[rip]
+	mov	rcx, rax
+	call	__mingw_printf
+	lea	rax, -80[rbp]
+	lea	rcx, .LC7[rip]
+	mov	rdx, rax
+	call	__mingw_scanf
+	cmp	eax, 1
+	jne	.L25
+	call	getchar
+	cmp	eax, 10
+	je	.L26
+	lea	rax, .LC8[rip]
+	mov	rcx, rax
+	call	__mingw_scanf
+	call	getchar
+	lea	rax, .LC9[rip]
+	mov	rcx, rax
+	call	__mingw_printf
+	jmp	.L25
+.L26:
+	lea	rax, -80[rbp]
+	mov	rcx, rax
+	call	strlen
+	cmp	rax, 3
+	ja	.L27
+	lea	rax, .LC10[rip]
+	mov	edx, 4
+	mov	rcx, rax
+	call	__mingw_printf
+	jmp	.L25
+.L27:
+	lea	rax, -80[rbp]
+	mov	rcx, rax
+	call	analyze_password
+	mov	DWORD PTR -4[rbp], eax
+	cmp	DWORD PTR -4[rbp], 2
+	jg	.L28
+	lea	rax, .LC11[rip]
+	mov	rcx, rax
+	call	__mingw_printf
+	jmp	.L25
+.L28:
+	cmp	DWORD PTR -4[rbp], 4
+	jg	.L29
+	lea	rax, .LC12[rip]
+	mov	rcx, rax
+	call	__mingw_printf
+	jmp	.L25
+.L29:
+	lea	rax, .LC13[rip]
+	mov	rcx, rax
+	call	__mingw_printf
+.L25:
+	lea	rax, .LC14[rip]
+	mov	rcx, rax
+	call	__mingw_printf
+	call	getchar
+	mov	eax, 0
+	add	rsp, 112
+	pop	rbp
+	ret
+	.seh_endproc
+	.def	__main;	.scl	2;	.type	32;	.endef
+	.ident	"GCC: (GNU) 15.2.0"
+	.def	getchar;	.scl	2;	.type	32;	.endef
+	.def	strlen;	.scl	2;	.type	32;	.endef
