@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define SIZE      64
+#define SIZE      65
 #define MIN_LEN    8
 #define MIN_OK     4
 #define LOWER      1
@@ -43,26 +43,9 @@ int analyze_password(const char *pass) {
     return score;
 }
 
-void clear_input(void) {
-    int c = getchar();
-
-    while (c != '\n' && c != EOF) c = getchar();
-}
-
-int is_english(const char *pass) {
-    int i = 0;
-
-    while (pass[i] != '\0') {
-        if (pass[i] < 32 || pass[i] > 126 || pass[i] == '?') return 0;
-        i++;
-    }
-    return 1;
-}
-
 int main(void) {
     char pass[SIZE];
-    char choice;
-    int score, done = 0;
+    int score;
 
     printf("PASSWORD STRENGTH CHECKER\n"
            "Rules (1 point each):\n"
@@ -72,38 +55,23 @@ int main(void) {
            "  4. A digit\n"
            "  5. A special character (! @ # $ ...)\n");
 
-    do {
-        printf("\n1. Check a password\n"
-               "2. Exit\n"
-               "Your choice: ");
-        if (scanf(" %c", &choice) != 1) break;
-        clear_input();
+    printf("Enter a password (no spaces, max 64 chars): ");
+    if (scanf("%64s", pass) == 1) {
+        if (getchar() != '\n') {
+            scanf("%*[^\n]");
+            getchar();
+            printf("No spaces allowed (and max 64 characters). Please try again.\n");
+        } else if (strlen(pass) < MIN_OK) {
+            printf("Too short! Use at least %d characters.\n", MIN_OK);
+        } else {
+            score = analyze_password(pass);
+            if (score <= 2) printf("Result : WEAK\n");
+            else if (score <= 4) printf("Result : MODERATE\n");
+            else printf("Result : STRONG\n");
+        }
+    }
 
-        if (choice == '1') {
-            printf("Enter a password (no spaces, max 63 chars): ");
-            if (scanf("%63s", pass) != 1) break;
-
-            if (getchar() != '\n') {
-                clear_input();
-                printf("No spaces allowed (and max 63 characters). Please try again.\n");
-            } else if (!is_english(pass)) {
-                printf("Use English letters, numbers and symbols only.\n");
-            } else if (strlen(pass) < MIN_OK) {
-                printf("Too short! Use at least %d characters.\n", MIN_OK);
-            } else {
-                score = analyze_password(pass);
-                if (score <= 2) printf("Result : WEAK\n");
-                else if (score <= 4) printf("Result : MODERATE\n");
-                else {
-                    printf("Result : STRONG\n");
-                    done = 1;
-                }
-            }
-        } else if (choice == '2') {
-            printf("Goodbye!\n");
-            done = 1;
-        } else printf("Invalid choice, please enter 1 or 2.\n");
-    } while (!done);
-
+    printf("\nPress Enter to close...\n");
+    getchar();
     return 0;
 }
