@@ -147,6 +147,51 @@
         nop
         leave
         ret
+"is_english":
+        push    rbp
+        mov     rbp, rsp
+        mov     QWORD PTR [rbp-24], rdi
+        mov     DWORD PTR [rbp-4], 0
+        jmp     .L30
+.L34:
+        mov     eax, DWORD PTR [rbp-4]
+        movsxd  rdx, eax
+        mov     rax, QWORD PTR [rbp-24]
+        add     rax, rdx
+        movzx   eax, BYTE PTR [rax]
+        cmp     al, 31
+        jle     .L31
+        mov     eax, DWORD PTR [rbp-4]
+        movsxd  rdx, eax
+        mov     rax, QWORD PTR [rbp-24]
+        add     rax, rdx
+        movzx   eax, BYTE PTR [rax]
+        cmp     al, 127
+        je      .L31
+        mov     eax, DWORD PTR [rbp-4]
+        movsxd  rdx, eax
+        mov     rax, QWORD PTR [rbp-24]
+        add     rax, rdx
+        movzx   eax, BYTE PTR [rax]
+        cmp     al, 63
+        jne     .L32
+.L31:
+        mov     eax, 0
+        jmp     .L33
+.L32:
+        add     DWORD PTR [rbp-4], 1
+.L30:
+        mov     eax, DWORD PTR [rbp-4]
+        movsxd  rdx, eax
+        mov     rax, QWORD PTR [rbp-24]
+        add     rax, rdx
+        movzx   eax, BYTE PTR [rax]
+        test    al, al
+        jne     .L34
+        mov     eax, 1
+.L33:
+        pop     rbp
+        ret
 .LC5:
         .string "PASSWORD STRENGTH CHECKER\nRules (1 point each):\n  1. At least 8 characters\n  2. A lowercase letter\n  3. An uppercase letter\n  4. A digit\n  5. A special character (! @ # $ ...)"
 .LC6:
@@ -160,16 +205,18 @@
 .LC10:
         .string "No spaces allowed (and max 63 characters). Please try again."
 .LC11:
-        .string "Too short! Use at least %d characters.\n"
+        .string "Use English letters, numbers and symbols only."
 .LC12:
-        .string "Result : WEAK"
+        .string "Too short! Use at least %d characters.\n"
 .LC13:
-        .string "Result : MODERATE"
+        .string "Result : WEAK"
 .LC14:
-        .string "Result : STRONG"
+        .string "Result : MODERATE"
 .LC15:
-        .string "Goodbye!"
+        .string "Result : STRONG"
 .LC16:
+        .string "Goodbye!"
+.LC17:
         .string "Invalid choice, please enter 1 or 2."
 "main":
         push    rbp
@@ -178,7 +225,7 @@
         mov     DWORD PTR [rbp-4], 0
         mov     edi, OFFSET FLAT:.LC5
         call    "puts"
-.L40:
+.L47:
         mov     edi, OFFSET FLAT:.LC6
         mov     eax, 0
         call    "printf"
@@ -188,11 +235,11 @@
         mov     eax, 0
         call    __isoc23_scanf
         cmp     eax, 1
-        jne     .L42
+        jne     .L49
         call    "clear_input"
         movzx   eax, BYTE PTR [rbp-81]
         cmp     al, 49
-        jne     .L32
+        jne     .L38
         mov     edi, OFFSET FLAT:.LC8
         mov     eax, 0
         call    "printf"
@@ -202,67 +249,76 @@
         mov     eax, 0
         call    __isoc23_scanf
         cmp     eax, 1
-        jne     .L43
+        jne     .L50
         call    "getchar"
         cmp     eax, 10
-        je      .L34
+        je      .L40
         call    "clear_input"
         mov     edi, OFFSET FLAT:.LC10
         call    "puts"
-        jmp     .L35
-.L34:
+        jmp     .L41
+.L40:
+        lea     rax, [rbp-80]
+        mov     rdi, rax
+        call    "is_english"
+        test    eax, eax
+        jne     .L42
+        mov     edi, OFFSET FLAT:.LC11
+        call    "puts"
+        jmp     .L41
+.L42:
         lea     rax, [rbp-80]
         mov     rdi, rax
         call    "strlen"
         cmp     rax, 3
-        ja      .L36
+        ja      .L43
         mov     esi, 4
-        mov     edi, OFFSET FLAT:.LC11
+        mov     edi, OFFSET FLAT:.LC12
         mov     eax, 0
         call    "printf"
-        jmp     .L35
-.L36:
+        jmp     .L41
+.L43:
         lea     rax, [rbp-80]
         mov     rdi, rax
         call    "analyze_password"
         mov     DWORD PTR [rbp-8], eax
         cmp     DWORD PTR [rbp-8], 2
-        jg      .L37
-        mov     edi, OFFSET FLAT:.LC12
-        call    "puts"
-        jmp     .L35
-.L37:
-        cmp     DWORD PTR [rbp-8], 4
-        jg      .L38
+        jg      .L44
         mov     edi, OFFSET FLAT:.LC13
         call    "puts"
-        jmp     .L35
-.L38:
+        jmp     .L41
+.L44:
+        cmp     DWORD PTR [rbp-8], 4
+        jg      .L45
         mov     edi, OFFSET FLAT:.LC14
         call    "puts"
-        mov     DWORD PTR [rbp-4], 1
-        jmp     .L35
-.L32:
-        movzx   eax, BYTE PTR [rbp-81]
-        cmp     al, 50
-        jne     .L39
+        jmp     .L41
+.L45:
         mov     edi, OFFSET FLAT:.LC15
         call    "puts"
         mov     DWORD PTR [rbp-4], 1
-        jmp     .L35
-.L39:
+        jmp     .L41
+.L38:
+        movzx   eax, BYTE PTR [rbp-81]
+        cmp     al, 50
+        jne     .L46
         mov     edi, OFFSET FLAT:.LC16
         call    "puts"
-.L35:
+        mov     DWORD PTR [rbp-4], 1
+        jmp     .L41
+.L46:
+        mov     edi, OFFSET FLAT:.LC17
+        call    "puts"
+.L41:
         cmp     DWORD PTR [rbp-4], 0
-        je      .L40
-        jmp     .L31
-.L42:
+        je      .L47
+        jmp     .L37
+.L49:
         nop
-        jmp     .L31
-.L43:
+        jmp     .L37
+.L50:
         nop
-.L31:
+.L37:
         mov     eax, 0
         leave
         ret
